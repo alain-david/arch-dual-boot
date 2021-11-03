@@ -290,7 +290,7 @@ Instalación de ArchLinux:
 
 45. Edita /etc/sudoers con nano o vim y descomenta la línea con "wheel":
 
-    # %wheel ALL=(ALL) ALL
+    "# %wheel ALL=(ALL) ALL"
 
 46. Salir de la sesión, desmontar particiones:
 
