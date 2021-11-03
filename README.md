@@ -275,22 +275,22 @@ Instalación de ArchLinux:
 
 42. Antes de reiniciar yo me aseguraría de tener internet:
 
-    pacman -S networkmanager
-    systemctl enable NetworkManager
+        pacman -S networkmanager
+        systemctl enable NetworkManager
 
 43. Ahora puedes crear tu usuario:
 
-    useradd -m username
-    passwd username
-    usermod -aG wheel,video,audio,storage username
+        useradd -m username
+        passwd username
+        usermod -aG wheel,video,audio,storage username
 
 44. Para tener privilegios de superusuario necesitamos sudo:
 
-    pacman -S sudo
+        pacman -S sudo
 
 45. Edita /etc/sudoers con nano o vim y descomenta la línea con "wheel":
 
-    "# %wheel ALL=(ALL) ALL"
+        "# %wheel ALL=(ALL) ALL"
 
 46. Salir de la sesión, desmontar particiones:
 
