@@ -1,57 +1,18 @@
-# INSTALACIÓN DE ARCHLINUX CON SOPORTE UEFI #
 # DUAL BOOT CON WINDOWS XX #
- 
-Editado por última vez: **2/11/2021 08:40 PM**
 
-Pasos preliminares en Windows XX:
-
-1. Asegurarse de que Windows está instalado en modo UEFI
-
-    Arranque Windows    
-    Pulse la tecla Win y "R" para iniciar la ventana Ejecutar    
-    En la ventana Ejecutar teclee "msinfo32" y pulse Enter    
-    En la ventana Información del sistema, seleccione Resumen del sistema en la izquierda y verifique el valor de modo de BIOS en la            derecha.    
-    Si el valor es UEFI, Windows se inicia en modo UEFI-GPT. Si el valor es Heredado('legacy'), Windows se inicia en modo BIOS-MBR.
-    
-2. Asegúrese de deshabilitar el fastboot y el secureboot en la configuración de su BIOS
-    
-3. Libere como mínimo 10 GB de disco duro para la instalación de ArchLinux
-    
-    Arranque Windows    
-    Abra el Administrador de discos    
-    Seleccionar el disco a reducir y hacer clic derecho sobre él    
-    Seleccionar Reducir Volumen    
-    Especificar la cantidad de espacio en MB a reducir    
-    Aceptar y reiniciar    
+Editado por última vez: **8/1/2022 11:40 AM**
 
 Instalación de ArchLinux:
-
-1. Configurar la BIOS de tu equipo para permitir el arranque desde un dispositivo USB, y el arranque EFI. Si la instalación se está haciendo en VirtualBox, configurar la máquina virtual para permitir el arranque con EFI. Seleccionar la máquina virtual, propiedades, System, Enable EFI.
-
-2. Iniciar la máquina y seleccionar el disco de instalación
-
-3. Seleccionar:
-
-        Arch Linux Arch ISO x86_64 UEFI USB
     
-4. Cuando termine de iniciar, cargar la distribución de teclado correspondiente. Por defecto, la distribución es US (Inglés). Para listar las distribuciones de teclado disponibles usar:
+1. Cargar la distribución de teclado correspondiente. Por defecto, la distribución es US (Inglés). Para listar las distribuciones de teclado disponibles usar:
 
         ls /usr/share/kbd/keymaps/**/*.map.gz
     
     *Si se desea cargar la distribución para un teclado en español por ejemplo, usar:*
    
         loadkeys es        
-4. Para verificar que estamos en modo UEFI, ejecutar el siguiente comando: 
 
-        ls /sys/firmware/efi/efivars
-
-    *Si se muestra contenido en la carpeta efivars, quiere decir que arrancamos el sistema correctamente en modo UEFI.*
-    
-6. Verificar la conexión a Internet haciendo ping a: archlinux.org (o cualquier otra página o IP)
-
-        ping archlinux.org
-
-7. En caso de tener sólo wifi, usar la utilidad:
+2. En caso de tener sólo wifi, usar la utilidad:
 
         ip link (Para listar las interfaces. Ubicar la de Wifi, generalmente es wlp2s0)
         iwctl
@@ -59,25 +20,25 @@ Instalación de ArchLinux:
 
     *Seleccionar la red, e ingresar contraseña.*
 
-8. Activar la sincronización del reloj del sistema con Internet: 
+3. Activar la sincronización del reloj del sistema con Internet: 
 
         timedatectl set-ntp true
 
-9. Verificar: (opcional)
+4. Verificar: (opcional)
 
         timedatectl status
 
-10. Identificar los discos: 
+5. Identificar los discos:
 
         lsblk
 
-11. Verificar la tabla de particiones: 
+6. Verificar la tabla de particiones: 
 
         gdisk /dev/sda
 
     *Se debe listar "GPT Present" al final de la lista.*
 
-12. Crear particion swap :
+7. Crear particion swap :
 
         gdisk /dev/sda
         n
@@ -88,132 +49,121 @@ Instalación de ArchLinux:
         W
         Y
         
-13. Crear particion / :
+8. Crear particion / :
 
         gdisk /dev/sda
         n
         ENTER
         ENTER
-        +10G
+        ENTER
         8304
         W
         Y
 
-14. Crear partición /home :
-
-        gdisk /dev/sda
-        n
-        ENTER
-        ENTER
-        ENTER
-        8302
-        W
-        Y
-
-15. Verificar:
+9. Verificar:
 
         lsblk
 
-16. Formatear particion swap :
+10. Formatear particion swap :
 
         mkswap /dev/sda5
 
-17. Activar swap :
+11. Activar swap :
 
         swapon /dev/sda5
 
-18. Formatear particion / :
+12. Formatear particion / :
 
         mkfs.ext4 /dev/sda6
 
-19. Formatear partición /home :
-
-        mkfs.ext4 /dev/sda7
-
-20. Montar particion / en /mnt :
+13. Montar particion / en /mnt :
         
         mount /dev/sda6 /mnt
 
-21. Crear directorio para /boot :
+14. Crear directorio para /boot :
 
         mkdir -p /mnt/boot
 
-22. Montar partición /boot, en este caso es /dev/sda2 pero puede cambiar, se debe usar la partición EFI de Windows:
+15. Montar partición /boot, en este caso es /dev/sda2 pero puede cambiar, se debe usar la partición EFI de Windows:
 
         mount /dev/sda2 /mnt/boot
 
-23. Crear directorio para /home :
+16. Instalar los paquetes base:
 
-        mkdir -p /mnt/home
+        pacstrap /mnt base linux linux-firmware nano
 
-24. Montar partición /home :
-
-        mount /dev/sda7 /mnt/home
-
-25. Instalar los paquetes base:
-
-        pacstrap /mnt base linux linux-firmware
-
-    *Esto iniciará la instalación de los paquetes base*
-
-26. Generar fstab:
+17. Generar fstab:
 
         genfstab -U /mnt >> /mnt/etc/fstab
 
-27. Verificar:
+18. Iniciar sesión como root en la instalación:
 
-        cat /mnt/etc/fstab
+        arch-chroot /mnt
 
-28. Iniciar sesión como root en la instalación:
+19. Configurar zona horaria:
 
-        arch-chroot /mnt /bin/bash
+        ln -sf /usr/share/zoneinfo/America/Havana /etc/localtime
 
-29. Generar locales:
+20. Generar /etc/adjtime:
+
+        hwclock --systohc
+
+21. Generar locales:
 
         nano /etc/locale.gen
 
     *Descomentar las líneas de interés quitando el símbolo #, en este caso:*
 
         en_US.UTF-8 UTF-8
-
-    *Guardar presionando Ctrl + X, luego Y y finalmente ENTER*
         
-30. Construir el soporte de idioma: 
+22. Construir el soporte de idioma: 
 
         locale-gen
 
-31. Crear el archivo de configuración correspondiente:
+23. Crear el archivo de configuración correspondiente:
 
-        nano /etc/locale.conf
+        echo LANG=en_US.UTF-8 > /etc/locale.conf
+   
+24. Configuración de red:
 
-    *Agregar el siguiente contenido:*
+    *Agregar el nombre del host a /etc/hostname, por ejemplo:*
 
-      LANG=en_US.UTF-8
+        echo arch > /etc/hostname
 
-    *Guardar presionando Ctrl + X, luego Y y finalmente ENTER*
+25. Agregar el hostname a /etc/hosts, por ejemplo:
 
-32. Ajustar zona horaria:
+        nano /etc/hosts
+        
+    *Agregar el siguiente contenido, reemplazando arch por tu hostname*
+        
+        127.0.0.1        localhost.localdomain        localhost
+        ::1              localhost.localdomain        localhost
+        127.0.1.1        arch.localdomain               arch
 
-        tzselect
-        2 
-        ENTER
-        14 (Número correspondiente a la zona)
-        ENTER
-        1 (Número correspondiente a la subzona)
-        ENTER
+26. Establecer contraseña para  root:
 
-33. Borrar el archivo de configuración anterior y crear el link simbólico para hacer el cambio permanente:
+        passwd
 
-        rm /etc/localtime
-        ln -s /usr/share/zoneinfo/<ZONA>/<SUB_ZONA> /etc/localtime
+27. Ahora puedes crear tu usuario:
 
-    *donde < ZONA > puede ser America y < SUB_ZONA > puede ser Bogota.*
-    
-34. Instalar **systemd-boot**:
+        useradd -m username
+        passwd username
+        usermod -aG wheel,video,audio,storage username
+
+28. Para privilegios de superusuario necesitamos sudo:
+
+        pacman -S sudo
+
+29. Edita el "Sudoers file" con nano y descomenta la línea con "wheel":
+
+        EDITOR=nano visudo
+        "# %wheel ALL=(ALL) ALL"
+
+30. Instalar **systemd-boot**: (En este paso se puede instalar GRUB o otro cargador a gusto)
 
         bootctl --path=/boot install
 
-35. Generar archivo de configuración de systemd-boot:
+31. Generar archivo de configuración de systemd-boot:
         
         nano /boot/loader/loader.conf
 
@@ -223,9 +173,7 @@ Instalación de ArchLinux:
         timeout 3
         editor 0
 
-    *Guardar presionando Ctrl + X, luego Y y finalmente ENTER*
-
-36. Generar el archivo de la entrada por defecto para systemd-boot:
+32. Generar el archivo de la entrada por defecto para systemd-boot:
 
         echo $(blkid -s PARTUUID -o value /dev/sda6) > /boot/loader/entries/arch.conf
 
@@ -233,7 +181,7 @@ Instalación de ArchLinux:
 
         14420948-2cea-4de7-b042-40f67c618660
 
-37. Abrir el archivo generado:
+33. Abrir el archivo generado:
 
         nano /boot/loader/entries/arch.conf
 
@@ -244,72 +192,16 @@ Instalación de ArchLinux:
         initrd /initramfs-linux.img
         options root=PARTUUID=14420948-2cea-4de7-b042-40f67c618660 rw
 
-    *Guardar presionando Ctrl + X, luego Y y finalmente ENTER*
-
-38. Configuración de red:
-
-    *Agregar el nombre del host a /etc/hostname, por ejemplo:*
-
-        echo arch > /etc/hostname
-
-39. Agregar el hostname a /etc/hosts, por ejemplo:
-
-        nano /etc/hosts
-        
-    *Agregar el siguiente contenido, reemplazando arch por tu hostname*
-        
-        127.0.0.1        localhost.localdomain        localhost
-        ::1              localhost.localdomain        localhost
-        127.0.1.1        arch.localdomain	          arch
-
-40. Instalar paquetes para el controlador WiFi:
-
-        pacman -S iw wpa_supplicant dialog elinks vim
-
-41. Ajustar contraseña para  root:
-
-        passwd
-
-    *Ingresar nueva contraseña*   
-    *Repetir la contraseña*
-
-42. Antes de reiniciar yo me aseguraría de tener internet:
+34. Antes de reiniciar instalar el administrador de red:
 
         pacman -S networkmanager
         systemctl enable NetworkManager
 
-43. Ahora puedes crear tu usuario:
-
-        useradd -m username
-        passwd username
-        usermod -aG wheel,video,audio,storage username
-
-44. Para tener privilegios de superusuario necesitamos sudo:
-
-        pacman -S sudo
-
-45. Edita /etc/sudoers con nano o vim y descomenta la línea con "wheel":
-
-        "# %wheel ALL=(ALL) ALL"
-
-46. Salir de la sesión, desmontar particiones:
+35. Salir de la sesión, desmontar particiones y reiniciar:
 
         exit
         umount -R /mnt
         umount -R /mnt/boot #si existe o aún está montado
-
-47. Antes de reiniciar, verificar que se hayan desmontado todas las particiones de /dev/sda:
-
-        lsblk
-
-48. Por último reiniciar con:
-
         reboot
-  
-49. Probar la conexión de red con:
 
-        ping www.archlinux.org
-        
-50. Si al tratar de iniciar el sistema, arranca Windows 10 sin mostrar el menu de Systemd-boot, lea la wiki, en el siguiente enlace: 
-
-    https://wiki.archlinux.org/index.php/Unified_Extensible_Firmware_Interface#Windows_changes_boot_order
+Copiado y modificado de https://wiki.archlinux.org/title/installation_guide
