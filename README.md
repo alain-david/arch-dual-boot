@@ -1,8 +1,8 @@
 Editado por última vez: **9/1/2022 2:30 PM**
 
 # Instalación de ArchLinux: #
-  - [Solo](https://github.com/alain-david/arch-install-dual/tree/master/README.md)
-  - [Dual](https://github.com/alain-david/arch-install-dual/tree/master/README_DUAL.md)
+  - [Solo](https://github.com/alain-david/arch-dual-boot/tree/master/README.md)
+  - [Dual](https://github.com/alain-david/arch-dual-boot/tree/master/README_DUAL.md)
     
 0. En caso de tener sólo wifi, usar la utilidad:
 
