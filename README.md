@@ -8,7 +8,7 @@ Editado por última vez: **9/1/2022 2:30 PM**
 
         ip link (Para listar las interfaces. Ubicar la de Wifi, generalmente es wlp2s0)
         iwctl
-        station <wlan> connect "nombre de la red" [pass]
+        station "wlan" connect "nombre de la red"
 
     *Seleccionar la red, e ingresar contraseña.*
 
