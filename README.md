@@ -145,8 +145,8 @@ Editado por última vez: **9/1/2022 2:30 PM**
         
     *Agregar el siguiente contenido, reemplazando arch por tu hostname*
         
-        127.0.0.1        localhost.localdomain        localhost
-        ::1              localhost.localdomain        localhost
+        127.0.0.1        localhost
+        ::1              localhost
         127.0.1.1        arch.localdomain               arch
 
 26. Establecer contraseña para  root:
