@@ -174,15 +174,22 @@ Editado por última vez: **9/1/2022 2:30 PM**
 
         pacman -S grub efibootmgr os-prober
         grub-install --target=x86_64-efi --efi-directory=/boot
-        os-prober
+
+31. Configurar os-prober en /etc/default/grub:    
+```bash
+    ## Descomentar la siguiente linea:
+    #GRUB_DISABLE_OS_PROBER=false
+```
+32. Ahora puedes ejecutar:
+
         grub-mkconfig -o /boot/grub/grub.cfg
 
-31. Antes de reiniciar instalar el administrador de red:
+32. Antes de reiniciar instalar el administrador de red:
 
         pacman -S networkmanager
         systemctl enable NetworkManager
 
-32. Salir de la sesión, desmontar particiones y reiniciar:
+33. Salir de la sesión, desmontar particiones y reiniciar:
 
         exit
         umount -R /mnt
