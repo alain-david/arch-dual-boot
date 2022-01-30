@@ -1,9 +1,5 @@
-Editado por última vez: **9/1/2022 2:30 PM**
+Editado por última vez: **29/1/2022 20:08 PM**
 
-# Instalación de ArchLinux: #
-  - [Solo](https://github.com/alain-david/arch-dual-boot/blob/main/README.md)
-  - [Dual](https://github.com/alain-david/arch-dual-boot/blob/main/README_DUAL.MD)
-    
 0. En caso de tener sólo wifi, usar la utilidad:
 
         ip link (Para listar las interfaces. Ubicar la de Wifi, generalmente es wlp2s0)
@@ -32,11 +28,11 @@ Editado por última vez: **9/1/2022 2:30 PM**
 
         lsblk
 
-5. Crear particion EFI :
+5. Crear particion EFI (En dualboot omitir este paso):
 
         gdisk /dev/sda
         n       #Nueva
-        1       #Particion 
+        ENTER   #Particion 
         ENTER   #Sector
         +200M   #Espacio
         ef00    #Tipo ef00="EFI"
@@ -47,7 +43,7 @@ Editado por última vez: **9/1/2022 2:30 PM**
 
         gdisk /dev/sda
         n       #Nueva
-        2       #Particion 
+        ENTER   #Particion 
         ENTER   #Sector
         +2G     #Espacio
         8200    #Tipo 8200=swap
@@ -58,7 +54,7 @@ Editado por última vez: **9/1/2022 2:30 PM**
 
         gdisk /dev/sda
         n
-        3       #Particion
+        ENTER   #Particion
         ENTER   #Sector
         ENTER   #Espacio
         8304    #Tipo 8304="/"
@@ -69,25 +65,25 @@ Editado por última vez: **9/1/2022 2:30 PM**
 
         fdisk -l        
 
-9. Formatear particion EFI :
+9. Formatear particion EFI (En dualboot omitir este paso):
 
-        mkfs.fat -F32 /dev/sda1
+        mkfs.fat -F32 /dev/sdax
 
 10. Formatear particion swap :
 
-        mkswap /dev/sda2
+        mkswap /dev/sdax
 
 11. Activar swap :
 
-        swapon /dev/sda2
+        swapon /dev/sdax
 
 12. Formatear particion / :
 
-        mkfs.ext4 /dev/sda3
+        mkfs.ext4 /dev/sdax
 
 13. Montar particion / en /mnt :
         
-        mount /dev/sda3 /mnt
+        mount /dev/sdax /mnt
 
 14. Crear directorio para /boot :
 
@@ -99,7 +95,7 @@ Editado por última vez: **9/1/2022 2:30 PM**
 
 16. Instalar los paquetes base:
 
-        pacstrap /mnt base linux linux-firmware nano
+        pacstrap /mnt base linux linux-firmware nvim
 
 17. Generar fstab:
 
@@ -119,7 +115,7 @@ Editado por última vez: **9/1/2022 2:30 PM**
 
 21. Generar locales:
 
-        nano /etc/locale.gen
+        nvim /etc/locale.gen
 
     *Descomentar las líneas de interés quitando el símbolo #, en este caso:*
 
@@ -141,7 +137,7 @@ Editado por última vez: **9/1/2022 2:30 PM**
 
 25. Agregar el hostname a /etc/hosts, por ejemplo:
 
-        nano /etc/hosts
+        nvim /etc/hosts
         
     *Agregar el siguiente contenido, reemplazando arch por tu hostname*
         
@@ -166,7 +162,7 @@ Editado por última vez: **9/1/2022 2:30 PM**
 29. Edita el "Sudoers file" con *nano* y descomenta la línea con "wheel":
 
 ```bash
-    EDITOR=nano visudo
+    EDITOR=nvim visudo
     ## Uncomment to allow members of group wheel to execute any command
     # %wheel ALL=(ALL) ALL
 ```
