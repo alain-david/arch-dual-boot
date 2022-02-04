@@ -32,7 +32,7 @@ Editado por última vez: **29/1/2022 20:08 PM**
 
         gdisk /dev/sda
         n       #Nueva
-        ENTER   #Particion 
+        1       #Particion 
         ENTER   #Sector
         +200M   #Espacio
         ef00    #Tipo ef00="EFI"
@@ -43,7 +43,7 @@ Editado por última vez: **29/1/2022 20:08 PM**
 
         gdisk /dev/sda
         n       #Nueva
-        ENTER   #Particion 
+        2       #Particion 
         ENTER   #Sector
         +2G     #Espacio
         8200    #Tipo 8200=swap
@@ -54,7 +54,7 @@ Editado por última vez: **29/1/2022 20:08 PM**
 
         gdisk /dev/sda
         n
-        ENTER   #Particion
+        3       #Particion
         ENTER   #Sector
         ENTER   #Espacio
         8304    #Tipo 8304="/"
@@ -67,23 +67,23 @@ Editado por última vez: **29/1/2022 20:08 PM**
 
 9. Formatear particion EFI (En dualboot omitir este paso):
 
-        mkfs.fat -F32 /dev/sdax
+        mkfs.fat -F32 /dev/sda1
 
 10. Formatear particion swap :
 
-        mkswap /dev/sdax
+        mkswap /dev/sda2
 
 11. Activar swap :
 
-        swapon /dev/sdax
+        swapon /dev/sda2
 
 12. Formatear particion / :
 
-        mkfs.ext4 /dev/sdax
+        mkfs.ext4 /dev/sda3
 
 13. Montar particion / en /mnt :
         
-        mount /dev/sdax /mnt
+        mount /dev/sda3 /mnt
 
 14. Crear directorio para /boot :
 
@@ -95,7 +95,7 @@ Editado por última vez: **29/1/2022 20:08 PM**
 
 16. Instalar los paquetes base:
 
-        pacstrap /mnt base linux linux-firmware nvim
+        pacstrap /mnt base linux linux-firmware neovim
 
 17. Generar fstab:
 
